@@ -1,0 +1,16 @@
+from vega_datasets import data
+import streamlit as st
+import altair as alt
+def main():
+df = load data()
+page = st.sidebar.selectbox(&quot;Choose a page&quot;, [&quot;Homepage&quot;, &quot;Exploration&quot;])
+if page == &quot;Ноmераge&quot;:
+st.header(&quot;This is your data explorer.&quot;)
+st.write(&quot;Please select a page on the left.&quot;)
+st.write(df)
+elif page == &quot;Exploration&quot;:
+st.title(&quot;Data Exploration&quot;)
+x_axis = st.selectbox(&quot;Choose a variable for the x-axis&quot;, df.columns, index=3)
+y_axis = st.selectbox(&quot;Choose a variable for the y-axis&quot;, df.columns, index=4)
+
+visualize_data(df, x_axis, y_axis)
