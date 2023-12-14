@@ -1,0 +1,13 @@
+pip install apache-airflow
+airflow db init
+airflow users create \
+    --username admin \
+    --firstname YourName \
+    --lastname YourLastName \
+    --role Admin \
+    --email example@example.com
+
+airflow webserver -D
+lsof -i tcp:8080 
+airflow scheduler
+
