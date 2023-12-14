@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+
+set1 = np.random.multivariate_normal([-10, 10], [[1.5, 1], [1, 1.5]], 150)
+set2 = np.random.multivariate_normal([-5, 10], [[1, 2], [2, 6]], 150)
+set3 = np.random.multivariate_normal([-1, 1], [[4, 0], [0, 4]], 150)
+set4 = np.random.multivariate_normal([10, -10], [[4, 0], [0, 4]], 150)
+set5 = np.random.multivariate_normal([3, -3], [[4, 0], [0, 4]], 150)
+
+data = np.vstack([set1, set2, set3, set4, set5])
+df = pd.DataFrame(data, columns=['X1', 'X2'])
+df['cluster'] = np.repeat(np.arange(1, 6), 150)
+
+plt.scatter(df['X1'], df['X2'], c=df['cluster'], cmap='viridis')
+plt.show()
+
+def kmeans(data, K=4, stop_crit=1e-3):
+    kmeans_model = KMeans(n_clusters=K, tol=stop_crit)
+    kmeans_model.fit(data)
+    data['cluster'] = kmeans_model.labels_
+    centroids = kmeans_model.cluster_centers_
+    return data, centroids
+
+result, centroids = kmeans(df[['X1', 'X2']], K=5)
+
+centroids_df = pd.DataFrame(centroids, columns=['X1', 'X2'])
+centroids_df['cluster'] = np.arange(1, 6)
+
+result['isCentroid'] = False
+centroids_df['isCentroid'] = True
+data_plot = pd.concat([centroids_df, result], ignore_index=True)
+
+plt.scatter(data_plot['X1'], data_plot['X2'], c=data_plot['cluster'], s=data_plot['isCentroid'] * 100,
+            alpha=data_plot['isCentroid'])
+plt.show()
